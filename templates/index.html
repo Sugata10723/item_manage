@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>物品管理</title>
+</head>
+<body>
+
+<h1>物品リスト</h1>
+<ul id="item-list">
+    {% for item in items %}
+    <li>{{ item.name }}: {{ item.description }}</li>
+    {% endfor %}
+</ul>
+
+<h2>物品の追加</h2>
+<input type="text" id="item-name" placeholder="物品名" />
+<input type="text" id="item-description" placeholder="説明" />
+<button onclick="addItem()">追加</button>
+
+<script>
+function addItem() {
+    const name = document.getElementById('item-name').value;
+    const description = document.getElementById('item-description').value;
+
+    fetch('/add', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            name: name,
+            description: description
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const li = document.createElement('li');
+        li.textContent = data.name + ": " + data.description;
+        document.getElementById('item-list').appendChild(li);
+    });
+}
+</script>
+
+</body>
+</html>
